@@ -46,7 +46,17 @@ class PaymentController extends Controller
     public function getPaymentMethods(Request $request)
     {
         try {
-            $methods = Payment::query()->where('enable', 1)->select(["id",'name'])->orderBy('sort', 'desc')->get();
+            $query = Payment::query()->where('enable', 1);
+            
+            // 检查用户是否登录
+            $user = auth('sanctum')->user();
+            
+            // 如果用户未登录，排除余额支付
+            if (!$user) {
+                $query->where('payment', '!=', 'BalancePay');
+            }
+            
+            $methods = $query->select(["id",'name'])->orderBy('sort', 'desc')->get();
 
             return response()->json([
                 'code' => 200,
