@@ -133,7 +133,8 @@
  *     schema="SearchOrderRequest",
  *     type="object",
  *     required={"order_sn"},
- *     @OA\Property(property="order_sn", type="string", example="9EXSMLNZQ511YLZZ", description="订单号")
+ *     @OA\Property(property="order_sn", type="string", example="9EXSMLNZQ511YLZZ", description="订单号"),
+ *     @OA\Property(property="user_id", type="integer", example=0, description="用户ID，0表示游客查询（查询user_id为NULL或0的订单），其他值表示登录用户查询")
  * )
  *
  * @OA\Schema(
@@ -212,7 +213,7 @@
  *     operationId="searchOrderBySN",
  *     tags={"订单-游客模式"},
  *     summary="通过订单号查询订单",
- *     description="通过订单号查询单个订单的详细信息",
+ *     description="通过订单号查询单个订单的详细信息。user_id参数：0表示游客查询（查询user_id为NULL或0的订单），其他值表示登录用户查询（精确匹配user_id）",
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\MediaType(
@@ -220,8 +221,13 @@
  *             @OA\Schema(ref="#/components/schemas/SearchOrderRequest"),
  *             @OA\Examples(
  *                 example="example1",
- *                 summary="查询订单示例",
- *                 value={"order_sn": "9EXSMLNZQ511YLZZ"}
+ *                 summary="游客查询订单示例",
+ *                 value={"order_sn": "9EXSMLNZQ511YLZZ", "user_id": 0}
+ *             ),
+ *             @OA\Examples(
+ *                 example="example2",
+ *                 summary="登录用户查询订单示例",
+ *                 value={"order_sn": "9EXSMLNZQ511YLZZ", "user_id": 123}
  *             )
  *         )
  *     ),

@@ -119,10 +119,23 @@ class PaymentController extends Controller
                     'data' => null
                 ], 500);
             $paymentService = new PaymentService($payment->payment, $payment->id);
+
+            // 余额支付需要登录用户
+            if ($payment->payment === 'BalancePay') {
+                if (!$this->order->user_id) {
+                    return response()->json([
+                        'code' => 500,
+                        'message' => '余额支付需要登录',
+                        'data' => null
+                    ], 500);
+                }
+            } 
+
             $result = $paymentService->pay([
                 'trade_no' => $orderSN,
+                'order_sn' => $orderSN,
                 'total_amount' =>  $this->order->actual_price,
-                'user_id' => 0,//$this->order->user_id,
+                'user_id' => $this->order->user_id,
 //                'stripe_token' => $request->input('token')
             ]);
             return response()->json([
@@ -240,8 +253,9 @@ class PaymentController extends Controller
             // 其他支付方式
             $result = $paymentService->pay([
                 'trade_no' => $orderSN,
+                'order_sn' => $orderSN,
                 'total_amount' =>  $this->order->actual_price,
-                'user_id' => 0,//$this->order->user_id,
+                'user_id' => $this->order->user_id,
             ]);
             return response()->json([
                 'code' => 200,
@@ -315,5 +329,93 @@ class PaymentController extends Controller
             'order_sn'=>$orderSN,
             'status'=>$order->status
         ];
+    }
+
+    /**
+     * 支付回调处理
+     *
+     * @OA\Post(
+     *     path="/api/v1/payment/notify/{payment_type}",
+     *     operationId="paymentNotify",
+     *     tags={"支付管理"},
+     *     summary="支付回调处理",
+     *     description="处理第三方支付平台的回调通知",
+     *     @OA\Parameter(
+     *         name="payment_type",
+     *         in="path",
+     *         required=true,
+     *         description="支付方式类型",
+     *         @OA\Schema(type="string", example="alipay_f2f")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/PaymentNotifyRequest")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="处理成功",
+     *         @OA\MediaType(
+     *             mediaType="text/plain",
+     *             @OA\Schema(type="string", example="success")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="处理失败",
+     *         @OA\MediaType(
+     *             mediaType="text/plain",
+     *             @OA\Schema(type="string", example="fail")
+     *         )
+     *     )
+     * )
+     *
+     * @param string $paymentType 支付方式
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function paymentNotify($paymentType, Request $request)
+    {
+        try {
+            // 获取支付配置
+            $payment = Payment::where('payment', $paymentType)->where('enable', 1)->first();
+            if (!$payment) {
+                Log::error('支付方式不存在或未启用', ['payment_type' => $paymentType]);
+                return response('fail', 500);
+            }
+
+            $paymentService = new PaymentService($paymentType, $payment->id);
+            $verify = $paymentService->notify($request->all());
+
+            if (!$verify) {
+                Log::error('支付回调验证失败', ['payment_type' => $paymentType, 'params' => $request->all()]);
+                return response('fail', 500);
+            }
+
+            // 处理订单完成
+            $this->orderProcessService->completedOrder(
+                $verify['trade_no'],
+                $verify['actual_price'] ?? $verify['amount'] ?? 0,
+                $verify['callback_no'] ?? ''
+            );
+
+            Log::info('支付回调处理成功', [
+                'payment_type' => $paymentType,
+                'trade_no' => $verify['trade_no'],
+                'callback_no' => $verify['callback_no'] ?? ''
+            ]);
+
+            return response(isset($verify['custom_result']) ? $verify['custom_result'] : 'success');
+        } catch (\Exception $e) {
+            Log::error('支付回调处理异常', [
+                'payment_type' => $paymentType,
+                'error' => $e->getMessage(),
+
+                'params' => $request->all()
+            ]);
+            return response('fail', 500);
+        }
     }
 }

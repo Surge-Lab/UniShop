@@ -56,6 +56,7 @@ class OrderController extends BaseController
     {
         try {
             $orderSN = $request->input('order_sn');
+            $userId = $request->input('user_id');
             
             if (empty($orderSN)) {
                 return response()->json([
@@ -65,7 +66,7 @@ class OrderController extends BaseController
                 ]);
             }
 
-            $order = $this->apiOrderService->detailOrderSN($orderSN);
+            $order = $this->apiOrderService->detailOrderSN($orderSN, $userId);
             
             if (!$order) {
                 return response()->json([
