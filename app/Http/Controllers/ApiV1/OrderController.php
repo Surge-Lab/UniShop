@@ -56,7 +56,7 @@ class OrderController extends BaseController
     {
         try {
             $orderSN = $request->input('order_sn');
-            $userId = $request->input('user_id');
+            $userId = $request->input('user_id', 0); // 如果没有传递 user_id，默认为 0
             
             if (empty($orderSN)) {
                 return response()->json([
