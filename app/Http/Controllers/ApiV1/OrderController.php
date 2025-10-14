@@ -56,7 +56,6 @@ class OrderController extends BaseController
     {
         try {
             $orderSN = $request->input('order_sn');
-            $userId = $request->input('user_id', 0); // 如果没有传递 user_id，默认为 0
             
             if (empty($orderSN)) {
                 return response()->json([
@@ -65,6 +64,10 @@ class OrderController extends BaseController
                     'data' => null
                 ]);
             }
+
+            // 自动检测用户登录状态
+            $user = auth('sanctum')->user();
+            $userId = $user ? $user->id : 0;
 
             $order = $this->apiOrderService->detailOrderSN($orderSN, $userId);
             
