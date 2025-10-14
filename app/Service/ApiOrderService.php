@@ -234,7 +234,19 @@ class ApiOrderService
      */
     public function detailOrderSN(string $orderSN,$userId=0):? Order
     {
-        $order = Order::query()->with(['coupon', 'payment', 'goods'])->where('order_sn', $orderSN)->where('user_id',$userId)->first();
+        $query = Order::query()->with(['coupon', 'payment', 'goods'])->where('order_sn', $orderSN);
+        
+        // 如果是游客查询（$userId = 0），查询 user_id 为 NULL 或 0 的订单
+        if ($userId === 0) {
+            $query->where(function($q) {
+                $q->whereNull('user_id')->orWhere('user_id', 0);
+            });
+        } else {
+            // 如果是登录用户查询，精确匹配 user_id
+            $query->where('user_id', $userId);
+        }
+        
+        $order = $query->first();
         return $order;
     }
 
