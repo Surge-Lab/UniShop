@@ -24,7 +24,7 @@
  *  )
  *
  * @OA\Server(
- *     url="http://unishop.wnecn.com",
+ *     url="https://shoptest1.surgelab.io",
  *     description="测试环境"
  * )
  *
