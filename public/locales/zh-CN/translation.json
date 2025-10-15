@@ -1,0 +1,251 @@
+{
+  "auth": {
+    "forgot": {
+      "backToLogin": "返回登录",
+      "codeLabel": "邮箱验证码",
+      "codePlaceholder": "请输入验证码",
+      "codeSentToast": "验证码已发送，请检查您的邮箱",
+      "confirmPasswordLabel": "确认新密码",
+      "confirmPasswordPlaceholder": "请再次输入新密码",
+      "description": "输入您的邮箱地址获取验证码，然后设置新密码",
+      "emailPlaceholder": "请输入您的邮箱地址",
+      "noAccount": "还没有账户？",
+      "passwordLabel": "新密码",
+      "passwordPlaceholder": "请输入新密码（至少6位）",
+      "registerNow": "立即注册",
+      "reset": "重置密码",
+      "resetting": "重置中...",
+      "sendCode": "获取验证码",
+      "sending": "发送中...",
+      "successToast": "密码重置成功！请使用新密码登录",
+      "title": "重置密码"
+    },
+    "login": {
+      "description": "欢迎回来！请登录您的账户继续",
+      "emailLabel": "邮箱地址",
+      "emailPlaceholder": "请输入邮箱地址",
+      "forgotPassword": "忘记密码？",
+      "logging": "登录中...",
+      "login": "登录",
+      "noAccount": "还没有账户？",
+      "passwordLabel": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "registerNow": "立即注册",
+      "successToast": "登录成功！",
+      "title": "登录账户"
+    },
+    "misc": {
+      "backHome": "← 返回首页",
+      "or": "或者"
+    },
+    "register": {
+      "codeLabel": "邮箱验证码",
+      "codePlaceholder": "请输入验证码",
+      "codeSentToast": "验证码已发送，请检查您的邮箱",
+      "confirmPasswordLabel": "确认密码",
+      "confirmPasswordPlaceholder": "请再次输入密码",
+      "description": "创建您的账户，开始使用",
+      "emailLabel": "邮箱地址",
+      "emailPlaceholder": "请输入邮箱地址",
+      "haveAccount": "已有账户？",
+      "loginNow": "立即登录",
+      "passwordLabel": "密码",
+      "passwordPlaceholder": "请输入密码（至少6位）",
+      "register": "注册账户",
+      "registering": "注册中...",
+      "sendCode": "获取验证码",
+      "sending": "发送中...",
+      "successToast": "注册成功！请使用您的账户登录",
+      "title": "注册账户"
+    },
+    "validation": {
+      "code": {
+        "format": "验证码应为4-6位数字",
+        "required": "请输入验证码"
+      },
+      "email": {
+        "invalid": "请输入有效的邮箱地址"
+      },
+      "password": {
+        "maxLength": "密码长度不能超过32位",
+        "minLength": "密码长度至少为6位",
+        "mismatch": "两次输入的密码不一致",
+        "required": "请输入密码"
+      }
+    }
+  },
+  "common": {
+    "copied": "已复制到剪贴板",
+    "goBack": "返回"
+  },
+  "goods": {
+    "card": {
+      "autoDelivery": "自动发货",
+      "buyNow": "立即购买",
+      "hot": "热门",
+      "sales": "销量",
+      "sold": "已售",
+      "stock": "库存"
+    },
+    "categories": {
+      "all": "全部分类"
+    },
+    "detail": {
+      "buyNow": "立即购买",
+      "email": "邮箱地址",
+      "emailPlaceholder": "请输入邮箱地址，用于接收订单信息",
+      "error": {
+        "emailRequired": "请输入邮箱地址",
+        "insufficientStock": "库存不足",
+        "invalidEmail": "请输入有效的邮箱地址",
+        "invalidQuantity": "请输入有效的购买数量"
+      },
+      "limit": "每人限购",
+      "pcs": "件",
+      "processing": "处理中...",
+      "quantity": "数量",
+      "sales_volume": "销量",
+      "stock": "库存",
+      "success": {
+        "orderCreated": "订单创建成功"
+      },
+      "title": "商品详情",
+      "total": "总计"
+    },
+    "hero": {
+      "searchPlaceholder": "搜索商品...",
+      "subtitle": "安全可靠 · 即时交付 · 优质服务",
+      "title": "发现精品数字商品"
+    },
+    "list": {
+      "allGoods": "全部商品",
+      "category": "分类",
+      "keyword": "关键词",
+      "noGoods": "暂无商品",
+      "noResults": "未找到相关商品",
+      "searchResults": "搜索结果"
+    },
+    "title": "首页"
+  },
+  "language": "语言",
+  "layout": {
+    "footer": {
+      "about": "关于我们",
+      "aboutDescription1": "UniShop 是一个专业的数字商品交易平台",
+      "aboutDescription2": "提供安全、便捷的购物体验",
+      "businessHours": "工作时间: {hours}",
+      "categories": "商品分类",
+      "contact": "联系我们",
+      "contactUs": "联系我们",
+      "copyright": "版权所有",
+      "customerService": "客户服务",
+      "help": "帮助中心",
+      "home": "首页",
+      "newProducts": "新品推荐",
+      "poweredBy": "由 React、TypeScript 和 Shadcn UI 提供支持",
+      "privacyPolicy": "隐私政策",
+      "quickLinks": "快速链接",
+      "supportEmail": "客服邮箱: {email}",
+      "supportPhone": "客服电话: {phone}",
+      "termsOfService": "服务条款"
+    },
+    "login": "登录",
+    "loginDescription": "查看订单、收藏商品、专享优惠",
+    "loginPrompt": "登录享受更多服务",
+    "logout": "退出登录",
+    "register": "注册"
+  },
+  "orders": {
+    "detail": {
+      "actualPayment": "实际支付",
+      "card": {
+        "productName": "商品名称",
+        "time": "订单时间",
+        "total": "订单总额"
+      },
+      "createTime": "创建时间",
+      "email": "邮箱地址",
+      "goodsInfo": "商品信息",
+      "goodsType": "商品类型",
+      "noPaymentMethods": "暂无可用的支付方式",
+      "notFound": "订单不存在",
+      "notFoundDesc": "请检查订单号是否正确或联系客服",
+      "orderInfo": "订单信息",
+      "orderNote": "订单备注",
+      "orderNumber": "订单号",
+      "orderStatus": "订单状态",
+      "payNow": "去支付",
+      "paymentCreated": "支付已创建",
+      "paymentFailed": "支付失败",
+      "paymentStarted": "支付已开始",
+      "processing": "处理中...",
+      "quantity": "数量",
+      "selectPaymentMethod": "选择支付方式",
+      "title": "订单详情",
+      "totalPrice": "商品总价",
+      "tradeNumber": "交易号",
+      "unitPrice": "单价"
+    },
+    "search": {
+      "browser": {
+        "description": "查询保存在浏览器中的订单信息",
+        "info": "系统会自动查询保存在您浏览器中的订单信息，无需输入任何内容。",
+        "title": "浏览器缓存查询"
+      },
+      "button": {
+        "searchBrowser": "查询缓存订单",
+        "searchOrder": "查询订单",
+        "searching": "查询中..."
+      },
+      "description": "通过多种方式查询您的订单状态",
+      "email": {
+        "description": "请输入下单时使用的邮箱地址",
+        "label": "邮箱地址",
+        "placeholder": "请输入邮箱地址",
+        "title": "通过邮箱查询"
+      },
+      "empty": {
+        "desc": "未查询到相关订单，请检查输入或尝试其他查询方式。",
+        "title": "暂无订单"
+      },
+      "sn": {
+        "description": "请输入完整的订单号进行查询",
+        "label": "订单号",
+        "placeholder": "请输入订单号",
+        "title": "通过订单号查询"
+      },
+      "tabs": {
+        "browser": "浏览器缓存",
+        "email": "邮箱查询",
+        "sn": "订单号查询"
+      },
+      "title": "订单查询",
+      "viewDetails": "查看详情"
+    },
+    "title": "我的订单",
+    "user": {
+      "description": "查看您的订单状态和详情",
+      "empty": {
+        "action": "去购物",
+        "desc": "您还没有任何订单，快去购买商品吧！",
+        "title": "暂无订单"
+      },
+      "title": "我的订单",
+      "viewDetails": "查看详情"
+    }
+  },
+  "request": {
+    "authExpired": "登录已过期，请重新登录",
+    "authForbidden": "权限不足，无法访问此资源",
+    "error": "HTTP {status} 错误",
+    "failed": "请求失败",
+    "networkError": "网络连接失败，请检查网络设置",
+    "notFound": "请求的资源不存在",
+    "serverError": "服务器内部错误，请稍后重试"
+  },
+  "user": {
+    "forgotPassword": "忘记密码？",
+    "login": "登录",
+    "register": "注册"
+  }
+}

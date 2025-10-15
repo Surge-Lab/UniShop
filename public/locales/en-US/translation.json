@@ -1,0 +1,251 @@
+{
+  "auth": {
+    "forgot": {
+      "backToLogin": "Back to sign in",
+      "codeLabel": "Verification code",
+      "codePlaceholder": "Enter code",
+      "codeSentToast": "Verification code sent, please check your email",
+      "confirmPasswordLabel": "Confirm new password",
+      "confirmPasswordPlaceholder": "Enter new password again",
+      "description": "Enter your email to receive a code and set a new password",
+      "emailPlaceholder": "Enter your email",
+      "noAccount": "Don't have an account?",
+      "passwordLabel": "New password",
+      "passwordPlaceholder": "Enter new password (min 6 chars)",
+      "registerNow": "Register now",
+      "reset": "Reset password",
+      "resetting": "Resetting...",
+      "sendCode": "Send code",
+      "sending": "Sending...",
+      "successToast": "Password reset successfully! Please sign in with new password",
+      "title": "Reset password"
+    },
+    "login": {
+      "description": "Welcome back! Please sign in to continue",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Enter your email",
+      "forgotPassword": "Forgot password?",
+      "logging": "Signing in...",
+      "login": "Sign in",
+      "noAccount": "Don't have an account?",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "registerNow": "Register now",
+      "successToast": "Signed in successfully!",
+      "title": "Sign in to your account"
+    },
+    "misc": {
+      "backHome": "← Back to home",
+      "or": "or"
+    },
+    "register": {
+      "codeLabel": "Verification code",
+      "codePlaceholder": "Enter code",
+      "codeSentToast": "Verification code sent, please check your email",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Enter password again",
+      "description": "Create your account to get started",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Enter your email",
+      "haveAccount": "Already have an account?",
+      "loginNow": "Sign in now",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter password (min 6 chars)",
+      "register": "Register",
+      "registering": "Registering...",
+      "sendCode": "Send code",
+      "sending": "Sending...",
+      "successToast": "Registered successfully! Please sign in",
+      "title": "Create an account"
+    },
+    "validation": {
+      "code": {
+        "format": "Verification code must be 4-6 digits",
+        "required": "Please enter the verification code"
+      },
+      "email": {
+        "invalid": "Please enter a valid email address"
+      },
+      "password": {
+        "maxLength": "Password cannot exceed 32 characters",
+        "minLength": "Password must be at least 6 characters",
+        "mismatch": "The two passwords do not match",
+        "required": "Please enter a password"
+      }
+    }
+  },
+  "common": {
+    "copied": "Copied to clipboard",
+    "goBack": "Go Back"
+  },
+  "goods": {
+    "card": {
+      "autoDelivery": "Auto Delivery",
+      "buyNow": "Buy Now",
+      "hot": "Hot",
+      "sales": "Sales",
+      "sold": "Sold",
+      "stock": "Stock"
+    },
+    "categories": {
+      "all": "All Categories"
+    },
+    "detail": {
+      "buyNow": "Buy Now",
+      "email": "Email Address",
+      "emailPlaceholder": "Please enter email address to receive order information",
+      "error": {
+        "emailRequired": "Email is required",
+        "insufficientStock": "Insufficient stock",
+        "invalidEmail": "Invalid email address",
+        "invalidQuantity": "Invalid quantity"
+      },
+      "limit": "Limit:",
+      "pcs": "pcs",
+      "processing": "Processing...",
+      "quantity": "Quantity",
+      "sales_volume": "Sales Volume",
+      "stock": "Stock",
+      "success": {
+        "orderCreated": "Order created successfully!"
+      },
+      "title": "Product Details",
+      "total": "Total"
+    },
+    "hero": {
+      "searchPlaceholder": "Search products...",
+      "subtitle": "Secure & Reliable · Instant Delivery · Quality Service",
+      "title": "Discover Premium Digital Products"
+    },
+    "list": {
+      "allGoods": "All Products",
+      "category": "Category",
+      "keyword": "Keyword",
+      "noGoods": "No products available",
+      "noResults": "No products found",
+      "searchResults": "Search Results"
+    },
+    "title": "Home"
+  },
+  "language": "Language",
+  "layout": {
+    "footer": {
+      "about": "About Us",
+      "aboutDescription1": "UniShop is a professional digital goods trading platform",
+      "aboutDescription2": "Providing secure and convenient shopping experience",
+      "businessHours": "Business hours: {hours}",
+      "categories": "Categories",
+      "contact": "Contact",
+      "contactUs": "Contact Us",
+      "copyright": "All rights reserved",
+      "customerService": "Customer Service",
+      "help": "Help Center",
+      "home": "Home",
+      "newProducts": "New Products",
+      "poweredBy": "Powered by React, TypeScript, and Shadcn UI.",
+      "privacyPolicy": "Privacy Policy",
+      "quickLinks": "Quick Links",
+      "supportEmail": "Support email: {email}",
+      "supportPhone": "Support phone: {phone}",
+      "termsOfService": "Terms of Service"
+    },
+    "login": "Login",
+    "loginDescription": "View orders, favorites, exclusive offers",
+    "loginPrompt": "Login for more services",
+    "logout": "Logout",
+    "register": "Register"
+  },
+  "orders": {
+    "detail": {
+      "actualPayment": "Actual Payment",
+      "card": {
+        "productName": "Product Name",
+        "time": "Order Time",
+        "total": "Order Total"
+      },
+      "createTime": "Create Time",
+      "email": "Email Address",
+      "goodsInfo": "Product Information",
+      "goodsType": "Product Type",
+      "noPaymentMethods": "No payment methods available",
+      "notFound": "Order not found",
+      "notFoundDesc": "Please check the order number or contact customer service",
+      "orderInfo": "Order Information",
+      "orderNote": "Order Note",
+      "orderNumber": "Order Number",
+      "orderStatus": "Order Status",
+      "payNow": "Pay Now",
+      "paymentCreated": "Payment created",
+      "paymentFailed": "Payment failed",
+      "paymentStarted": "Payment started",
+      "processing": "Processing...",
+      "quantity": "Quantity",
+      "selectPaymentMethod": "Please select a payment method",
+      "title": "Order Details",
+      "totalPrice": "Total Price",
+      "tradeNumber": "Trade Number",
+      "unitPrice": "Unit Price"
+    },
+    "search": {
+      "browser": {
+        "description": "Search orders saved in your browser",
+        "info": "The system will automatically search orders saved in your browser. No input is required.",
+        "title": "Browser Cache Search"
+      },
+      "button": {
+        "searchBrowser": "Search Cached Orders",
+        "searchOrder": "Search Order",
+        "searching": "Searching..."
+      },
+      "description": "Search your order status via multiple methods",
+      "email": {
+        "description": "Please enter the email used when placing the order",
+        "label": "Email Address",
+        "placeholder": "Enter email address",
+        "title": "Search by Email"
+      },
+      "empty": {
+        "desc": "No related orders found. Please check your input or try other search methods.",
+        "title": "No orders"
+      },
+      "sn": {
+        "description": "Please enter the full order number to search",
+        "label": "Order Number",
+        "placeholder": "Enter order number",
+        "title": "Search by Order Number"
+      },
+      "tabs": {
+        "browser": "Browser Cache",
+        "email": "Email",
+        "sn": "Order Number"
+      },
+      "title": "Order Search",
+      "viewDetails": "View details"
+    },
+    "title": "My Orders",
+    "user": {
+      "description": "View your order status and details",
+      "empty": {
+        "action": "Shop now",
+        "desc": "You don't have any orders yet. Go buy something!",
+        "title": "No orders"
+      },
+      "title": "My Orders",
+      "viewDetails": "View details"
+    }
+  },
+  "request": {
+    "authExpired": "Session expired, please login again",
+    "authForbidden": "Access denied, insufficient permissions",
+    "error": "HTTP {status} Error",
+    "failed": "Request Failed",
+    "networkError": "Network connection failed, please check your network settings",
+    "notFound": "The requested resource was not found",
+    "serverError": "Internal server error, please try again later"
+  },
+  "user": {
+    "forgotPassword": "Forgot Password?",
+    "login": "Login",
+    "register": "Register"
+  }
+}

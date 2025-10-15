@@ -1,0 +1,1 @@
+import{J as e,X as t,i as n}from"./index-CufUCwgp.js";var r=t(e());function i({className:e,...t}){return(0,r.jsx)(`div`,{"data-slot":`skeleton`,className:n(`bg-accent animate-pulse rounded-md`,e),...t})}export{i as t};
