@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\User as UserModel;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
@@ -187,7 +188,7 @@ class CustomerController extends AdminController
                     null,
                     '管理员调整余额',
                     $reason,
-                    admin_user()->name ?? '管理员'
+                    Admin::user()->name ?? '管理员'
                 );
                 $message = "成功为用户 {$user->username} 增加余额 ¥{$newAmount}";
             } elseif ($type === 'decrease') {
@@ -203,7 +204,7 @@ class CustomerController extends AdminController
                     null,
                     '管理员调整余额',
                     $reason,
-                    admin_user()->name ?? '管理员'
+                    Admin::user()->name ?? '管理员'
                 );
                 $message = "成功为用户 {$user->username} 减少余额 ¥{$newAmount}";
             } else {
@@ -218,7 +219,7 @@ class CustomerController extends AdminController
                         null,
                         '管理员设置余额',
                         $reason,
-                        admin_user()->name ?? '管理员'
+                        Admin::user()->name ?? '管理员'
                     );
                 } elseif ($difference < 0) {
                     $balanceService->decreaseBalance(
@@ -229,7 +230,7 @@ class CustomerController extends AdminController
                         null,
                         '管理员设置余额',
                         $reason,
-                        admin_user()->name ?? '管理员'
+                        Admin::user()->name ?? '管理员'
                     );
                 }
                 $message = "成功设置用户 {$user->username} 余额为 ¥{$newAmount}";

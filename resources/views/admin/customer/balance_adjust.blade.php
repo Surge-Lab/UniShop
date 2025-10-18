@@ -20,7 +20,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label>调整类型</label>
+                        <label><span class="text-danger">*</span> 调整类型</label>
                         <select class="form-control" name="type" id="adjust_type" required>
                             <option value="">请选择调整类型</option>
                             <option value="increase">增加余额</option>
@@ -30,7 +30,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label>金额</label>
+                        <label><span class="text-danger">*</span> 金额</label>
                         <div class="input-group">
                             <span class="input-group-addon">¥</span>
                             <input type="number" class="form-control" name="amount" id="adjust_amount" 
@@ -39,8 +39,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label>调整原因</label>
-                        <textarea class="form-control" name="reason" rows="3" required 
+                        <label><span class="text-danger">*</span> 调整原因（必填）</label>
+                        <textarea class="form-control" name="reason" id="adjust_reason" rows="3" required 
                                   placeholder="请详细说明调整原因，此信息将记录在余额变动日志中"></textarea>
                     </div>
                     
@@ -97,6 +97,27 @@ $(document).ready(function() {
     
     // 确认调整
     $('#confirmAdjust').click(function() {
+        // 前端验证
+        var type = $('#adjust_type').val();
+        var amount = $('#adjust_amount').val();
+        var reason = $('#adjust_reason').val();
+        
+        if (!type) {
+            Dcat.error('请选择调整类型');
+            return;
+        }
+        
+        if (!amount || amount <= 0) {
+            Dcat.error('请输入有效的金额');
+            return;
+        }
+        
+        if (!reason || reason.trim() === '') {
+            Dcat.error('请填写调整原因（必填）');
+            $('#adjust_reason').focus();
+            return;
+        }
+        
         var formData = $('#balanceAdjustForm').serialize();
         
         $.ajax({
@@ -117,7 +138,15 @@ $(document).ready(function() {
             },
             error: function(xhr) {
                 var response = xhr.responseJSON;
-                Dcat.error(response.message || '操作失败');
+                if (response && response.errors) {
+                    var errorMsg = '';
+                    for (var field in response.errors) {
+                        errorMsg += response.errors[field].join('<br>') + '<br>';
+                    }
+                    Dcat.error(errorMsg);
+                } else {
+                    Dcat.error(response.message || '操作失败');
+                }
             }
         });
     });
