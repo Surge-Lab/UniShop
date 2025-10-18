@@ -24,16 +24,3 @@ use Dcat\Admin\Show;
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
-
-// 配置菜单
-Admin::menu(function ($menu) {
-    // 添加客户管理菜单
-    $menu->add([
-        'id' => 'customers',
-        'title' => '客户管理',
-        'icon' => 'fa fa-users',
-        'uri' => 'customers',
-        'parent_id' => 0,
-        'order' => 100,
-    ]);
-});

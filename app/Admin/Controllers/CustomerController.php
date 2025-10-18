@@ -11,6 +11,13 @@ use Dcat\Admin\Show;
 class CustomerController extends AdminController
 {
     /**
+     * 页面标题
+     *
+     * @var string
+     */
+    protected $title = '客户管理';
+
+    /**
      * Make a grid builder.
      *
      * @return Grid
