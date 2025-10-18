@@ -69,7 +69,7 @@ class PaymentService
 
         return $this->payment->pay([
             'notify_url' => $notifyUrl,
-            'return_url' => $return_url??url("bill",[$order['trade_no']]) ,
+            'return_url' => $return_url ?: url("bill",[$order['trade_no']]) ,
             'trade_no' => $order['trade_no'],
             'total_amount' => $order['total_amount'],
             'user_id' => 0,//$order['user_id'],

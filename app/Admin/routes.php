@@ -29,6 +29,9 @@ Route::group([
     $router->resource('pay', 'PayController');
     $router->resource('order', 'OrderController');
     $router->resource('users', 'UserController');
+    $router->resource('customers', 'CustomerController');
+    $router->post('customers/adjust-balance', 'CustomerController@adjustBalance');
+    $router->get('customers/{userId}/balance-logs', 'CustomerController@balanceLogs');
     $router->get('import-carmis', 'CarmisController@importCarmis');
     $router->get('system-setting', 'SystemSettingController@systemSetting');
     $router->get('email-test', 'EmailTestController@emailTest');

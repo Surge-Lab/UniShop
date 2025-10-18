@@ -499,6 +499,73 @@ class OrderController extends BaseController
 
 
     /**
+     * 取消订单
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cancelOrder(Request $request, int $id)
+    {
+        try {
+            $user = $request->user();
+            
+            if (empty($id)) {
+                return response()->json([
+                    'code' => 400,
+                    'message' => __('dujiaoka.prompt.server_illegal_request'),
+                    'data' => null
+                ], 400);
+            }
+
+            // 获取订单
+            $order = $this->apiOrderService->detailOrder($id, $user->id);
+            
+            if (!$order) {
+                return response()->json([
+                    'code' => 404,
+                    'message' => __('dujiaoka.prompt.order_does_not_exist'),
+                    'data' => null
+                ], 404);
+            }
+
+            // 检查订单状态是否可以取消（只允许待支付状态）
+            if ($order->status !== Order::STATUS_WAIT_PAY) {
+                return response()->json([
+                    'code' => 400,
+                    'message' => '只有待支付状态的订单才能取消',
+                    'data' => null
+                ], 400);
+            }
+
+            // 执行取消订单逻辑
+            $result = $this->orderProcessService->cancelOrder($order);
+            
+            if ($result) {
+                return response()->json([
+                    'code' => 200,
+                    'message' => '订单取消成功',
+                    'data' => [
+                        'order' => $order->fresh()->load(['coupon', 'payment', 'goods'])
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'code' => 500,
+                    'message' => '订单取消失败',
+                    'data' => null
+                ], 500);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'message' => $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
+    }
+
+    /**
      * 获取状态文本
      *
      * @param int $status
@@ -513,7 +580,8 @@ class OrderController extends BaseController
             \App\Models\Order::STATUS_COMPLETED => '已完成',
             \App\Models\Order::STATUS_FAILURE => '失败',
             \App\Models\Order::STATUS_EXPIRED => '过期',
-            \App\Models\Order::STATUS_ABNORMAL => '异常'
+            \App\Models\Order::STATUS_ABNORMAL => '异常',
+            \App\Models\Order::STATUS_CANCELLED => '已取消'
         ];
 
         return $statusMap[$status] ?? '未知状态';

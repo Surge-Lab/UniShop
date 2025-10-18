@@ -63,7 +63,7 @@ class CouponService
     }
 
     /**
-     * 设置优惠券次数+1
+     * 设置优惠券次数+1（通过ID）
      *
      * @param int $id
      * @return int
@@ -75,6 +75,19 @@ class CouponService
     public function retIncrByID(int $id)
     {
         return Coupon::query()->where('id',  $id)->increment('ret', 1);
+    }
+
+    /**
+     * 设置优惠券次数+1（通过优惠码）
+     *
+     * @param string $coupon
+     * @return int
+     */
+    public function retIncr(string $coupon)
+    {
+        return Coupon::query()
+            ->where('coupon',  $coupon)
+            ->increment('ret', 1);
     }
 
 }

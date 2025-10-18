@@ -48,6 +48,11 @@ class Order extends BaseModel
     const STATUS_ABNORMAL = 6;
 
     /**
+     * 已取消
+     */
+    const STATUS_CANCELLED = 7;
+
+    /**
      * 优惠券未回退
      */
     const COUPON_BACK_WAIT = 0;
@@ -90,7 +95,8 @@ class Order extends BaseModel
             self::STATUS_COMPLETED => admin_trans('order.fields.status_completed'),
             self::STATUS_FAILURE => admin_trans('order.fields.status_failure'),
             self::STATUS_ABNORMAL => admin_trans('order.fields.status_abnormal'),
-            self::STATUS_EXPIRED => admin_trans('order.fields.status_expired')
+            self::STATUS_EXPIRED => admin_trans('order.fields.status_expired'),
+            self::STATUS_CANCELLED => admin_trans('order.fields.status_cancelled')
         ];
     }
 
@@ -153,7 +159,7 @@ class Order extends BaseModel
     }
 
     /**
-     * 关联支付
+     * 关联支付方式（旧版兼容）
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      *
@@ -161,12 +167,13 @@ class Order extends BaseModel
      * @copyright assimon<ashang@utf8.hk>
      * @link      http://utf8.hk/
      */
-//    public function pay()
-//    {
-//        return $this->belongsTo(Pay::class, 'pay_id');
-//    }
+    public function pay()
+    {
+        return $this->belongsTo(Payment::class, 'pay_id');
+    }
+    
     /**
-     * 关联支付
+     * 关联支付方式
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      *

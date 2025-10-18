@@ -93,11 +93,7 @@ class BalancePay
                     throw new \Exception('余额不足');
                 }
 
-                // 扣减余额
-//                $user->amount -= $orderAmount;
-//                $user->save();
-
-                // 记录余额变动
+                // 记录余额变动（此方法内部已经包含扣减余额的操作）
                 $this->balanceService->decreaseBalance(
                     $user->id,
                     $orderAmount,
@@ -107,17 +103,18 @@ class BalancePay
                     '商品购买',
                     '订单号：' . $order['order_sn']
                 );
+                
                 $trade_no = $order['trade_no'];
-                $order = $this->apiOrderService->detailOrderSN($order['order_sn'],$userId);
+                $orderModel = $this->apiOrderService->detailOrderSN($order['order_sn'],$userId);
 
-                if($order &&$order->is_supplier>0){
-                    $supplier = Supplier::query()->where('id', $order->supplier_id)->first();
+                if($orderModel && $orderModel->is_supplier>0){
+                    $supplier = Supplier::query()->where('id', $orderModel->supplier_id)->first();
                     if($supplier){
-                        $supplierService = new SupplierService($supplier['method'],$order->supplier_id);
+                        $supplierService = new SupplierService($supplier['method'],$orderModel->supplier_id);
                         //todo 上游商品下单
-                        $goods=Goods::query()->where('id',$order->goods_id)->first();
+                        $goods=Goods::query()->where('id',$orderModel->goods_id)->first();
                         $formatIpt = format_charge_input($goods->other_ipu_cnf);
-                        $otherIpt = explode(PHP_EOL,$order->info);
+                        $otherIpt = explode(PHP_EOL,$orderModel->info);
                         $ois = [];
                         foreach ($formatIpt as $item) {
                             foreach($otherIpt as $ipt){
@@ -127,7 +124,7 @@ class BalancePay
                                 }
                             }
                         }
-                        $res = $supplierService->buyGoods($order->order_sn,$order->email,$order->goods_id,$order->buy_amount,$ois);
+                        $res = $supplierService->buyGoods($orderModel->order_sn,$orderModel->email,$orderModel->goods_id,$orderModel->buy_amount,$ois);
                         if($res['code'] != 200){
                             throw new RuleValidationException($res['message']);
                         }
@@ -136,10 +133,14 @@ class BalancePay
                     }
                 }
 
-                //业务处理
-//                $this->orderProcessService->completedOrder($order['order_sn'], $orderAmount,$trade_no,$userId);
+                // 完成订单处理（自动发货或人工处理）
+                $this->orderProcessService->completedOrder($order['order_sn'], $orderAmount, $trade_no, $userId);
 
                 DB::commit();
+
+
+                // 刷新订单数据，获取最新状态
+//                $orderModel = $this->apiOrderService->detailOrderSN($order['order_sn'], $userId);
 
                 // 余额支付直接成功，返回成功状态
                 return [
@@ -147,10 +148,11 @@ class BalancePay
                     'data' => [
                         'paid' => true,
                         'order_sn' => $order['order_sn'],
-                        'trade_no' => $order['trade_no'],
-//                        'callback_no' => 'BALANCE_' . time() . '_' . $user->id,
+                        'trade_no' => $trade_no,
                         'amount' => $orderAmount,
-                        'balance_after' => bcsub($user->amount,$orderAmount,2)
+                        'balance_after' => bcsub($user->amount, $orderAmount, 2),
+                        // 'status' => $orderModel->status,
+                        // 'status_text' => $orderModel->status == Order::STATUS_COMPLETED ? '已完成' : '待处理'
                     ]
                 ];
 

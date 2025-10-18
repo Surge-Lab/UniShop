@@ -19,6 +19,8 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'ApiV1'], function () {
         // 通过订单号查询订单
         Route::get('user/order/list', 'OrderController@userOrders');
         Route::get('user/order/{id}', 'OrderController@userOrderDetail');
+        // 取消订单
+        Route::post('user/order/{id}/cancel', 'OrderController@cancelOrder');
     });
     
     // 通过订单号查询订单

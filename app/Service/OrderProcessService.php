@@ -505,7 +505,6 @@ class OrderProcessService
             'order_id' => $order->order_sn,
             'buy_amount' => $order->buy_amount,
             'ord_price' => $order->actual_price,
-            'created_at' => $order->created_at,
         ];
         $tpl = $this->emailtplService->detailByToken('manual_send_manage_mail');
         $mailBody = replace_mail_tpl($tpl, $mailData);
@@ -560,6 +559,50 @@ class OrderProcessService
         // 邮件发送
         MailSend::dispatch($order->email, $mailBody['tpl_name'], $mailBody['tpl_content']);
         return $order;
+    }
+
+    /**
+     * 取消订单（只允许待支付状态）
+     *
+     * @param Order $order
+     * @return bool
+     * @throws \Exception
+     */
+    public function cancelOrder(Order $order): bool
+    {
+        DB::beginTransaction();
+        try {
+            // 验证订单状态（只允许待支付状态取消）
+            if ($order->status !== Order::STATUS_WAIT_PAY) {
+                throw new \Exception('只有待支付状态的订单才能取消');
+            }
+
+            // 更新订单状态为已取消
+            $order->status = Order::STATUS_CANCELLED;
+            $order->save();
+
+            // 如果使用了优惠券，需要回退优惠券
+            if ($order->coupon_id) {
+                $this->couponService->retIncr($order->coupon->coupon);
+            }
+
+            // 待支付状态的订单不涉及库存和卡密，无需处理
+            // 因为库存和卡密的扣减是在支付成功后才发生的
+
+            DB::commit();
+            
+            Log::info("订单取消成功", [
+                'order_sn' => $order->order_sn,
+                'user_id' => $order->user_id
+            ]);
+            
+            return true;
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error("取消订单失败: " . $exception->getMessage());
+            throw $exception;
+        }
     }
 
 }
