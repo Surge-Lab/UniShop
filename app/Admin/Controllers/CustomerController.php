@@ -6,6 +6,7 @@ use App\Models\User as UserModel;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Show;
 
 class CustomerController extends AdminController
@@ -81,7 +82,7 @@ class CustomerController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, UserModel::class, function (Show $show) {
+        return Show::make($id, new UserModel(), function (Show $show) {
             $show->field('id', 'ID');
             $show->field('email', '邮箱');
             $show->field('amount', '余额')->as(function ($amount) {
@@ -264,16 +265,16 @@ class CustomerController extends AdminController
     /**
      * 获取用户余额变动记录
      */
-    public function balanceLogs(\Illuminate\Http\Request $request, $userId)
+    public function balanceLogs($userId)
     {
         $user = UserModel::findOrFail($userId);
         $logs = \App\Models\BalanceLog::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->paginate(20);
         
-        // 使用 Dcat Admin 的 Content 类
-        return \Dcat\Admin\Layout\Content::make()
-            ->header('余额变动记录')
+        // 使用 Content 包装器返回完整页面
+        return Content::make()
+            ->title('余额变动记录')
             ->description('用户：' . $user->email)
             ->body(view('admin.customer.balance_logs', compact('user', 'logs')));
     }

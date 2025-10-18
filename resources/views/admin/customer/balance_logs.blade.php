@@ -1,11 +1,9 @@
-@extends('admin::layouts.content')
-
-@section('content')
+{{-- 余额变动记录页面 --}}
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">用户余额变动记录 - {{ $user->username }}</h3>
+                <h3 class="card-title">用户余额变动记录 - {{ $user->email }}</h3>
                 <div class="card-tools">
                     <a href="{{ admin_url('customers') }}" class="btn btn-sm btn-default">
                         <i class="fa fa-arrow-left"></i> 返回用户列表
@@ -101,4 +99,3 @@
         </div>
     </div>
 </div>
-@endsection
