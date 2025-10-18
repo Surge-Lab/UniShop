@@ -35,7 +35,7 @@ class CustomerController extends AdminController
             $grid->column('status', '状态')->display(function ($status) {
                 return $status == 1 ? '<span class="badge badge-success">正常</span>' : '<span class="badge badge-danger">禁用</span>';
             });
-            $grid->column('secret_key', 'API密钥')->limit(20)->copyable();
+            $grid->column('secret_key', 'API密钥')->copyable()->width('200px');
             $grid->column('created_at', '注册时间')->sortable();
             $grid->column('updated_at', '更新时间')->sortable();
 
@@ -51,7 +51,9 @@ class CustomerController extends AdminController
             });
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
-                $actions->disableView();
+                // 不禁用查看按钮，让用户可以查看详情
+                // $actions->disableView();
+                
                 // 使用统一的按钮样式
                 $actions->append('<a href="javascript:void(0);" class="grid-action-button balance-adjust" data-id="'.$this->id.'" data-email="'.$this->email.'" data-amount="'.$this->amount.'"><i class="fa fa-money"></i> 调整余额</a>');
                 $actions->append('<a href="'.admin_url('customers/'.$this->id.'/balance-logs').'" class="grid-action-button"><i class="fa fa-history"></i> 余额记录</a>');
@@ -82,7 +84,9 @@ class CustomerController extends AdminController
         return Show::make($id, UserModel::class, function (Show $show) {
             $show->field('id', 'ID');
             $show->field('email', '邮箱');
-            $show->field('amount', '余额');
+            $show->field('amount', '余额')->as(function ($amount) {
+                return '¥' . number_format($amount, 2);
+            });
             $show->field('status', '状态')->using([
                 1 => '正常',
                 2 => '禁用'
@@ -90,6 +94,10 @@ class CustomerController extends AdminController
             $show->field('secret_key', 'API密钥');
             $show->field('created_at', '注册时间');
             $show->field('updated_at', '更新时间');
+            
+            // 禁用编辑和删除按钮（在详情页）
+            $show->disableEditButton();
+            $show->disableDeleteButton();
         });
     }
 
@@ -263,9 +271,9 @@ class CustomerController extends AdminController
             ->orderBy('created_at', 'desc')
             ->paginate(20);
         
-        // 使用 Dcat Admin 的内容包装器
+        // 使用 Dcat Admin 的 Content 类
         return \Dcat\Admin\Layout\Content::make()
-            ->title('余额变动记录')
+            ->header('余额变动记录')
             ->description('用户：' . $user->email)
             ->body(view('admin.customer.balance_logs', compact('user', 'logs')));
     }
