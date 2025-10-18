@@ -35,7 +35,7 @@ class CustomerController extends AdminController
             $grid->column('status', '状态')->display(function ($status) {
                 return $status == 1 ? '<span class="badge badge-success">正常</span>' : '<span class="badge badge-danger">禁用</span>';
             });
-            $grid->column('secret', 'API密钥')->limit(20)->copyable();
+            $grid->column('secret_key', 'API密钥')->limit(20)->copyable();
             $grid->column('created_at', '注册时间')->sortable();
             $grid->column('updated_at', '更新时间')->sortable();
 
@@ -52,8 +52,9 @@ class CustomerController extends AdminController
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
                 $actions->disableView();
-                $actions->append('<a href="javascript:void(0);" class="btn btn-xs btn-primary balance-adjust" data-id="'.$this->id.'" data-email="'.$this->email.'" data-amount="'.$this->amount.'">调整余额</a>');
-                $actions->append('<a href="'.admin_url('customers/'.$this->id.'/balance-logs').'" class="btn btn-xs btn-info">余额记录</a>');
+                // 使用统一的按钮样式
+                $actions->append('<a href="javascript:void(0);" class="grid-action-button balance-adjust" data-id="'.$this->id.'" data-email="'.$this->email.'" data-amount="'.$this->amount.'"><i class="fa fa-money"></i> 调整余额</a>');
+                $actions->append('<a href="'.admin_url('customers/'.$this->id.'/balance-logs').'" class="grid-action-button"><i class="fa fa-history"></i> 余额记录</a>');
             });
 
             $grid->tools(function (Grid\Tools $tools) {
@@ -86,7 +87,7 @@ class CustomerController extends AdminController
                 1 => '正常',
                 2 => '禁用'
             ]);
-            $show->field('secret', 'API密钥');
+            $show->field('secret_key', 'API密钥');
             $show->field('created_at', '注册时间');
             $show->field('updated_at', '更新时间');
         });
@@ -125,11 +126,11 @@ class CustomerController extends AdminController
                 ->required()
                 ->help('用户状态：正常可正常使用，禁用将无法登录');
             
-            $form->text('secret', 'API密钥')
+            $form->text('secret_key', 'API密钥')
                 ->default(function () {
                     return UserModel::generateSecret();
                 })
-                ->rules('required|unique:users,secret,' . $form->getKey())
+                ->rules('required|unique:users,secret_key,' . $form->getKey())
                 ->help('用户API密钥，用于API调用，系统会自动生成');
 
             $form->display('created_at', '注册时间');
@@ -261,8 +262,12 @@ class CustomerController extends AdminController
         $logs = \App\Models\BalanceLog::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->paginate(20);
-            
-        return view('admin.customer.balance_logs', compact('user', 'logs'));
+        
+        // 使用 Dcat Admin 的内容包装器
+        return \Dcat\Admin\Layout\Content::make()
+            ->title('余额变动记录')
+            ->description('用户：' . $user->email)
+            ->body(view('admin.customer.balance_logs', compact('user', 'logs')));
     }
 }
    
