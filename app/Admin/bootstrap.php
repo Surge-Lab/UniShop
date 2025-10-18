@@ -26,7 +26,7 @@ use Dcat\Admin\Show;
  */
 
 // 配置菜单
-Admin::menu(function (\Dcat\Admin\Menu $menu) {
+Admin::menu(function ($menu) {
     // 添加客户管理菜单
     $menu->add([
         'id' => 'customers',
