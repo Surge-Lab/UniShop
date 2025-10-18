@@ -16,7 +16,8 @@ class BalanceLog extends Model
     const TYPE_DEDUCT = 5;          // 扣除
     const TYPE_TRANSFER_IN = 6;     // 转账转入
     const TYPE_TRANSFER_OUT = 7;    // 转账转出
-    const TYPE_AGENT_CONSUME = 8;    // 代理订单消费
+    const TYPE_AGENT_CONSUME = 8;   // 代理订单消费
+    const TYPE_ADMIN_ADJUST = 9;    // 管理员调整
 
     // 来源类型常量
     const SOURCE_RECHARGE_ORDER = 'recharge_order';
