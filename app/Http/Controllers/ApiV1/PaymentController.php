@@ -144,7 +144,7 @@ class PaymentController extends Controller
             $result = $paymentService->pay([
                 'trade_no' => $orderSN,
                 'order_sn' => $orderSN,
-                'total_amount' =>  $this->order->actual_price,
+                'total_amount' =>  bcmul($this->order->actual_price, 100, 0), // 转换为分
                 'user_id' => $this->order->user_id,
 //                'stripe_token' => $request->input('token')
             ]);
@@ -264,7 +264,7 @@ class PaymentController extends Controller
             $result = $paymentService->pay([
                 'trade_no' => $orderSN,
                 'order_sn' => $orderSN,
-                'total_amount' =>  $this->order->actual_price,
+                'total_amount' =>  bcmul($this->order->actual_price, 100, 0), // 转换为分
                 'user_id' => $this->order->user_id,
             ]);
             return response()->json([

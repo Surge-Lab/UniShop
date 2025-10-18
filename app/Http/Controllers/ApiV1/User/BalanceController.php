@@ -86,7 +86,7 @@ class BalanceController extends Controller
             $paymentService = new PaymentService($payment->payment, $payment->id);
             $result         = $paymentService->pay([
                 'trade_no'     => $rechargeOrder->order_sn,
-                'total_amount' => $rechargeOrder->actual_amount,
+                'total_amount' => bcmul($rechargeOrder->actual_amount, 100, 0), // 转换为分
                 'user_id'      => $rechargeOrder->user_id
             ]);
 

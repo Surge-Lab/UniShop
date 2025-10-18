@@ -125,7 +125,7 @@ class PaymentController extends BaseController
             $paymentService = new PaymentService($payment->payment, $payment->id);
             $result = $paymentService->pay([
                 'trade_no' => $orderSN,
-                'total_amount' =>  $this->order->actual_price,
+                'total_amount' =>  bcmul($this->order->actual_price, 100, 0), // 转换为分
                 'user_id' => 0,//$this->order->user_id,
 //                'stripe_token' => $request->input('token')
             ]);
