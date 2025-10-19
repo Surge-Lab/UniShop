@@ -12,6 +12,169 @@
     }
   ],
   "paths": {
+    "/api/v1/user/order/{id}/cancel": {
+      "post": {
+        "tags": ["Orders"],
+        "summary": "Cancel order",
+        "description": "Cancel a specific order by its ID (only orders with pending payment status can be cancelled)",
+        "operationId": "cancelOrder",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Order ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order cancelled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "订单取消成功"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "order": {
+                          "$ref": "#/components/schemas/Order"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功取消订单",
+                    "value": {
+                      "code": 200,
+                      "message": "订单取消成功",
+                      "data": {
+                        "order": {
+                          "id": 1,
+                          "order_sn": "ABC123DEF456GHI7",
+                          "title": "王者荣耀点券 x 1",
+                          "email": "user@example.com",
+                          "actual_price": "98.00",
+                          "status": -1,
+                          "created_at": "2024-01-01 12:00:00"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid order status or missing parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidStatus": {
+                    "summary": "订单状态不允许取消",
+                    "value": {
+                      "code": 400,
+                      "message": "只有待支付状态的订单才能取消",
+                      "data": null
+                    }
+                  },
+                  "missingId": {
+                    "summary": "缺少订单ID",
+                    "value": {
+                      "code": 400,
+                      "message": "请求参数错误",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权访问",
+                    "value": {
+                      "code": 401,
+                      "message": "Unauthenticated",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "notFound": {
+                    "summary": "订单不存在",
+                    "value": {
+                      "code": 404,
+                      "message": "订单不存在",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "serverError": {
+                    "summary": "服务器内部错误",
+                    "value": {
+                      "code": 500,
+                      "message": "订单取消失败",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/order/search-by-sn": {
       "post": {
         "tags": ["Orders"],
@@ -183,6 +346,49 @@
   },
   "components": {
     "schemas": {
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Order ID",
+            "example": 1
+          },
+          "order_sn": {
+            "type": "string",
+            "description": "Order number",
+            "example": "ABC123DEF456GHI7"
+          },
+          "title": {
+            "type": "string",
+            "description": "Order title",
+            "example": "王者荣耀点券 x 1"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Customer email",
+            "example": "user@example.com"
+          },
+          "actual_price": {
+            "type": "string",
+            "description": "Actual payment price",
+            "example": "98.00"
+          },
+          "status": {
+            "type": "integer",
+            "description": "Order status",
+            "enum": [1, 2, 3, 4, 5, 6, -1],
+            "example": 4
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation time",
+            "example": "2024-01-01 12:00:00"
+          }
+        }
+      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -202,6 +408,14 @@
             "example": null
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "description": "Bearer Token认证",
+        "bearerFormat": "JWT",
+        "scheme": "bearer"
       }
     }
   }
