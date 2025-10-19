@@ -14,18 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * @OA\Schema(
- *     schema="Order",
- *     type="object",
- *     @OA\Property(property="id", type="integer", example=1),
- *     @OA\Property(property="order_sn", type="string", example="ABC123DEF456GHI7"),
- *     @OA\Property(property="title", type="string", example="王者荣耀点券 x 1"),
- *     @OA\Property(property="email", type="string", format="email", example="user@example.com"),
- *     @OA\Property(property="actual_price", type="string", example="98.00"),
- *     @OA\Property(property="status", type="integer", example=4),
- *     @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01 12:00:00")
- * )
- * 
  * API V1 订单控制器
  *
  * Class OrderController
@@ -514,21 +502,21 @@ class OrderController extends BaseController
      * 
      * @OA\Post(
      *     path="/api/v1/user/order/{id}/cancel",
-     *     tags={"Orders"},
-     *     summary="Cancel order",
-     *     description="Cancel a specific order by its ID (only orders with pending payment status can be cancelled)",
+     *     tags={"订单-登录模式"},
+     *     summary="取消订单",
+     *     description="取消指定ID的订单（仅限待支付状态）",
      *     operationId="cancelOrder",
      *     security={{"BearerAuth": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Order ID",
+     *         description="订单ID",
      *         required=true,
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Order cancelled successfully",
+     *         description="订单取消成功",
      *         @OA\JsonContent(
      *             @OA\Property(property="code", type="integer", example=200),
      *             @OA\Property(property="message", type="string", example="订单取消成功"),
@@ -544,39 +532,23 @@ class OrderController extends BaseController
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Bad request - Invalid order status or missing parameters",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="code", type="integer", example=400),
-     *             @OA\Property(property="message", type="string", example="只有待支付状态的订单才能取消"),
-     *             @OA\Property(property="data", type="null", example=null)
-     *         )
+     *         description="请求参数错误",
+     *         @OA\JsonContent(ref="#/components/schemas/BaseResponse")
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="Unauthorized - Authentication required",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="code", type="integer", example=401),
-     *             @OA\Property(property="message", type="string", example="Unauthenticated"),
-     *             @OA\Property(property="data", type="null", example=null)
-     *         )
+     *         description="未授权访问",
+     *         @OA\JsonContent(ref="#/components/schemas/BaseResponse")
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Order not found",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="code", type="integer", example=404),
-     *             @OA\Property(property="message", type="string", example="订单不存在"),
-     *             @OA\Property(property="data", type="null", example=null)
-     *         )
+     *         description="订单不存在",
+     *         @OA\JsonContent(ref="#/components/schemas/BaseResponse")
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal server error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="code", type="integer", example=500),
-     *             @OA\Property(property="message", type="string", example="订单取消失败"),
-     *             @OA\Property(property="data", type="null", example=null)
-     *         )
+     *         description="服务器内部错误",
+     *         @OA\JsonContent(ref="#/components/schemas/BaseResponse")
      *     )
      * )
      * 
