@@ -14,17 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * @OA\Info(
- *     title="UniShop API Documentation",
- *     version="1.0.0",
- *     description="UniShop API Documentation"
- * )
- * @OA\SecurityScheme(
- *     securityScheme="BearerAuth",
- *     type="http",
- *     scheme="bearer",
- *     bearerFormat="JWT"
- * )
  * @OA\Schema(
  *     schema="Order",
  *     type="object",
@@ -36,7 +25,7 @@ use Illuminate\Support\Facades\Log;
  *     @OA\Property(property="status", type="integer", example=4),
  *     @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01 12:00:00")
  * )
-/**
+ * 
  * API V1 订单控制器
  *
  * Class OrderController
