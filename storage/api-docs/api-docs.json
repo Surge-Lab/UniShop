@@ -1,42 +1,22 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.0.0",
   "info": {
-    "title": "独角数卡 API V1",
-    "description": "独角数卡项目的API V1版本，提供了RESTful风格的JSON API接口",
-    "version": "1.0.0",
-    "contact": {
-      "name": "独角数卡开发团队",
-      "email": "Ashang@utf8.hk",
-      "url": "https://utf8.hk"
-    },
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
+    "title": "UniShop API Documentation",
+    "description": "UniShop API Documentation",
+    "version": "1.0.0"
   },
   "servers": [
     {
       "url": "https://shoptest1.surgelab.io",
-      "description": "生产环境"
-    },
-    {
-      "url": "http://localhost:8000",
-      "description": "开发环境"
-    }
-  ],
-  "tags": [
-    {
-      "name": "订单查询",
-      "description": "订单查询相关接口"
+      "description": "Production server"
     }
   ],
   "paths": {
     "/api/v1/order/search-by-sn": {
       "post": {
-        "tags": ["订单查询"],
-        "summary": "通过订单号查询订单",
-        "description": "通过订单号查询单个订单的详细信息",
-        "operationId": "searchOrderBySN",
+        "tags": ["Orders"],
+        "summary": "Search order by order number",
+        "description": "Search for a single order by its order number",
         "requestBody": {
           "required": true,
           "content": {
@@ -47,18 +27,8 @@
                 "properties": {
                   "order_sn": {
                     "type": "string",
-                    "description": "订单号",
-                    "example": "ABC123DEF456GHI7",
-                    "minLength": 1,
-                    "maxLength": 50
-                  }
-                }
-              },
-              "examples": {
-                "example1": {
-                  "summary": "查询订单示例",
-                  "value": {
-                    "order_sn": "ABC123DEF456GHI7"
+                    "description": "Order number",
+                    "example": "ABC123DEF456GHI7"
                   }
                 }
               }
@@ -67,7 +37,7 @@
         },
         "responses": {
           "200": {
-            "description": "查询成功",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -82,41 +52,7 @@
                       "example": "success"
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "order": {
-                          "$ref": "#/components/schemas/Order"
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "success": {
-                    "summary": "成功响应示例",
-                    "value": {
-                      "code": 200,
-                      "message": "success",
-                      "data": {
-                        "order": {
-                          "id": 1,
-                          "order_sn": "ABC123DEF456GHI7",
-                          "title": "王者荣耀点券 x 1",
-                          "email": "user@example.com",
-                          "actual_price": "98.00",
-                          "status": 4,
-                          "created_at": "2024-01-01 12:00:00",
-                          "goods": {
-                            "id": 1,
-                            "gd_name": "王者荣耀点券",
-                            "gd_description": "王者荣耀游戏点券充值"
-                          },
-                          "pay": {
-                            "id": 1,
-                            "pay_name": "支付宝"
-                          }
-                        }
-                      }
+                      "type": "object"
                     }
                   }
                 }
@@ -124,51 +60,21 @@
             }
           },
           "400": {
-            "description": "请求参数错误",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "badRequest": {
-                    "summary": "参数错误示例",
-                    "value": {
-                      "code": 400,
-                      "message": "请求参数错误",
-                      "data": null
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Bad request"
                     }
                   }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "订单不存在",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "notFound": {
-                    "summary": "订单不存在示例",
-                    "value": {
-                      "code": 404,
-                      "message": "订单不存在",
-                      "data": null
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "服务器内部错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -178,10 +84,9 @@
     },
     "/api/v1/order/search-by-email": {
       "post": {
-        "tags": ["订单查询"],
-        "summary": "通过邮箱查询订单",
-        "description": "通过邮箱地址查询该邮箱下的所有订单（最多返回5个）",
-        "operationId": "searchOrderByEmail",
+        "tags": ["Orders"],
+        "summary": "Search orders by email",
+        "description": "Search for orders by email address",
         "requestBody": {
           "required": true,
           "content": {
@@ -193,30 +98,13 @@
                   "email": {
                     "type": "string",
                     "format": "email",
-                    "description": "邮箱地址",
+                    "description": "Email address",
                     "example": "user@example.com"
                   },
                   "search_pwd": {
                     "type": "string",
-                    "description": "查询密码（如果系统开启查询密码功能）",
-                    "example": "123456",
-                    "minLength": 0,
-                    "maxLength": 50
-                  }
-                }
-              },
-              "examples": {
-                "example1": {
-                  "summary": "仅邮箱查询",
-                  "value": {
-                    "email": "user@example.com"
-                  }
-                },
-                "example2": {
-                  "summary": "邮箱+密码查询",
-                  "value": {
-                    "email": "user@example.com",
-                    "search_pwd": "123456"
+                    "description": "Search password (optional)",
+                    "example": "123456"
                   }
                 }
               }
@@ -225,7 +113,7 @@
         },
         "responses": {
           "200": {
-            "description": "查询成功",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -240,104 +128,9 @@
                       "example": "success"
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "orders": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/Order"
-                          }
-                        },
-                        "total": {
-                          "type": "integer",
-                          "description": "订单总数",
-                          "example": 2
-                        }
-                      }
+                      "type": "object"
                     }
                   }
-                },
-                "examples": {
-                  "success": {
-                    "summary": "成功响应示例",
-                    "value": {
-                      "code": 200,
-                      "message": "success",
-                      "data": {
-                        "orders": [
-                          {
-                            "id": 1,
-                            "order_sn": "ABC123DEF456GHI7",
-                            "title": "王者荣耀点券 x 1",
-                            "email": "user@example.com",
-                            "actual_price": "98.00",
-                            "status": 4,
-                            "created_at": "2024-01-01 12:00:00"
-                          },
-                          {
-                            "id": 2,
-                            "order_sn": "DEF456GHI789JKL0",
-                            "title": "和平精英UC x 2",
-                            "email": "user@example.com",
-                            "actual_price": "196.00",
-                            "status": 4,
-                            "created_at": "2024-01-02 15:30:00"
-                          }
-                        ],
-                        "total": 2
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "请求参数错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "badRequest": {
-                    "summary": "参数错误示例",
-                    "value": {
-                      "code": 400,
-                      "message": "邮箱地址不能为空",
-                      "data": null
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "未找到相关订单",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "notFound": {
-                    "summary": "未找到订单示例",
-                    "value": {
-                      "code": 404,
-                      "message": "未找到相关订单",
-                      "data": null
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "服务器内部错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -347,30 +140,22 @@
     },
     "/api/v1/order/search-by-browser": {
       "post": {
-        "tags": ["订单查询"],
-        "summary": "通过浏览器缓存查询订单",
-        "description": "查询浏览器Cookie中保存的订单信息",
-        "operationId": "searchOrderByBrowser",
+        "tags": ["Orders"],
+        "summary": "Search orders by browser cache",
+        "description": "Search for orders stored in browser cookies",
         "requestBody": {
           "required": false,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "description": "无需参数，系统会自动从Cookie中获取订单号"
-              },
-              "examples": {
-                "empty": {
-                  "summary": "空请求体",
-                  "value": {}
-                }
+                "type": "object"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "查询成功",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -385,75 +170,9 @@
                       "example": "success"
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "orders": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/Order"
-                          }
-                        },
-                        "total": {
-                          "type": "integer",
-                          "description": "订单总数",
-                          "example": 1
-                        }
-                      }
+                      "type": "object"
                     }
                   }
-                },
-                "examples": {
-                  "success": {
-                    "summary": "成功响应示例",
-                    "value": {
-                      "code": 200,
-                      "message": "success",
-                      "data": {
-                        "orders": [
-                          {
-                            "id": 1,
-                            "order_sn": "ABC123DEF456GHI7",
-                            "title": "王者荣耀点券 x 1",
-                            "email": "user@example.com",
-                            "actual_price": "98.00",
-                            "status": 4,
-                            "created_at": "2024-01-01 12:00:00"
-                          }
-                        ],
-                        "total": 1
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "未找到缓存订单",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "notFound": {
-                    "summary": "未找到缓存订单示例",
-                    "value": {
-                      "code": 404,
-                      "message": "未找到浏览器缓存中的订单",
-                      "data": null
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "服务器内部错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -464,164 +183,26 @@
   },
   "components": {
     "schemas": {
-      "SuccessResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "description": "响应状态码",
-            "example": 200
-          },
-          "message": {
-            "type": "string",
-            "description": "响应消息",
-            "example": "success"
-          },
-          "data": {
-            "description": "响应数据",
-            "nullable": true
-          }
-        }
-      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
           "code": {
             "type": "integer",
-            "description": "错误状态码",
+            "description": "Error code",
             "example": 400
           },
           "message": {
             "type": "string",
-            "description": "错误消息",
-            "example": "请求参数错误"
+            "description": "Error message",
+            "example": "Bad request"
           },
           "data": {
             "type": "null",
-            "description": "错误时数据为空",
+            "description": "Error data is null",
             "example": null
           }
         }
-      },
-      "Order": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "订单ID",
-            "example": 1
-          },
-          "order_sn": {
-            "type": "string",
-            "description": "订单号",
-            "example": "ABC123DEF456GHI7"
-          },
-          "title": {
-            "type": "string",
-            "description": "订单标题",
-            "example": "王者荣耀点券 x 1"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "description": "下单邮箱",
-            "example": "user@example.com"
-          },
-          "actual_price": {
-            "type": "string",
-            "description": "实际支付价格",
-            "example": "98.00"
-          },
-          "status": {
-            "type": "integer",
-            "description": "订单状态",
-            "enum": [1, 2, 3, 4, 5, 6, -1],
-            "example": 4
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "创建时间",
-            "example": "2024-01-01 12:00:00"
-          },
-          "goods": {
-            "$ref": "#/components/schemas/Goods"
-          },
-          "pay": {
-            "$ref": "#/components/schemas/Pay"
-          },
-          "coupon": {
-            "$ref": "#/components/schemas/Coupon"
-          }
-        }
-      },
-      "Goods": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "商品ID",
-            "example": 1
-          },
-          "gd_name": {
-            "type": "string",
-            "description": "商品名称",
-            "example": "王者荣耀点券"
-          },
-          "gd_description": {
-            "type": "string",
-            "description": "商品描述",
-            "example": "王者荣耀游戏点券充值"
-          }
-        }
-      },
-      "Pay": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "支付方式ID",
-            "example": 1
-          },
-          "pay_name": {
-            "type": "string",
-            "description": "支付方式名称",
-            "example": "支付宝"
-          }
-        }
-      },
-      "Coupon": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "优惠券ID",
-            "example": 1
-          },
-          "coupon": {
-            "type": "string",
-            "description": "优惠券代码",
-            "example": "SAVE10"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-API-Key",
-        "description": "API密钥认证（如果需要）"
       }
     }
-  },
-  "security": [
-    {
-      "ApiKeyAuth": []
-    }
-  ],
-  "externalDocs": {
-    "description": "更多文档信息",
-    "url": "https://github.com/assimon/dujiaoka"
   }
 }
