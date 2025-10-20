@@ -12,9 +12,14 @@ Route::get('pay-gateway/{handle}/{payway}/{orderSN}', 'PayController@redirectGat
 Route::get('payment-gateway/{orderSN}', 'PaymentController@paymentGateway');
 Route::get('payment-check/{orderSN}', 'PaymentController@check');
 
+// 通用支付回调路由（独立在group外，指向App\Http\Controllers\PaymentController）
+Route::any('pay/notify/{method}/{uuid}', 'PaymentController@notify')
+    ->middleware(['dujiaoka.pay_gate_way']);
+
 // 支付相关
 Route::group(['prefix' => 'pay', 'namespace' => 'Pay', 'middleware' => ['dujiaoka.pay_gate_way']], function () {
-    Route::post('notify/{method}/{uuid}', 'PaymentController@notify');
+    // Route::post('notify/{method}/{uuid}', 'PaymentController@notify');
+    // Route::any('notify/{method}/{uuid}', 'PaymentController@notify');
 
     // 支付宝
     Route::get('alipay/{payway}/{orderSN}', 'AlipayController@gateway');

@@ -63,7 +63,8 @@ class EPay {
         }
         return [
             'trade_no' => $params['out_trade_no'],
-            'callback_no' => $params['trade_no']
+            'callback_no' => $params['trade_no'],
+            'actual_price' => $params['money']
         ];
     }
 }
