@@ -216,13 +216,13 @@ class PaymentController extends BaseController
         
         // 订单状态处理逻辑
         if ($order->status === Order::STATUS_WAIT_PAY) {
-            // ✅ 正常情况：订单待支付，处理支付成功
+            // 正常情况：订单待支付，处理支付成功
             $this->balanceService->completedOrder($tradeNo, $totalAmount, $callbackNo);
             return true;
         }
         
         if ($order->status === Order::STATUS_COMPLETED) {
-            // ✅ 订单已完成，防止重复处理（支付平台可能重复回调）
+            // 订单已完成，防止重复处理（支付平台可能重复回调）
             Log::info('订单已完成，跳过重复处理', [
                 'order_sn' => $tradeNo,
                 'status' => $order->status
@@ -230,7 +230,7 @@ class PaymentController extends BaseController
             return true;
         }
         
-        // ⚠️ 异常情况：用户已付款，但订单状态异常（过期/取消等）
+        // 异常情况：用户已付款，但订单状态异常（过期/取消等）
         if (in_array($order->status, [Order::STATUS_EXPIRED, Order::STATUS_CANCELLED, Order::STATUS_FAILURE])) {
             Log::error('⚠️ 支付异常：用户已付款但订单状态异常', [
                 'order_sn' => $tradeNo,

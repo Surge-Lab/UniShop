@@ -287,12 +287,11 @@ class BalanceService
             throw new Exception('订单金额不一致');
         }
 
-        // 更新订单状态
-        $order->update([
-            'status' => \App\Models\Order::STATUS_COMPLETED,
-            'trade_no' => $callbackNo,
-            'paid_at' => now(),
-        ]);
+        // 更新订单状态（使用直接赋值，更安全）
+        $order->status = \App\Models\Order::STATUS_COMPLETED;
+        $order->trade_no = $callbackNo;
+        $order->paid_at = now();
+        $order->save();
 
         return true;
     }
