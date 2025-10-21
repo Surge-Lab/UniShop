@@ -568,10 +568,15 @@ class OrderProcessService
      * @return bool
      * @throws \Exception
      */
-    public function cancelOrder(Order $order): bool
+    public function cancelOrder(Order $order, int $userId = null): bool
     {
         DB::beginTransaction();
         try {
+            // 验证订单归属（如果提供了 userId）
+            if ($userId !== null && $order->user_id !== $userId) {
+                throw new \Exception('无权限操作此订单');
+            }
+            
             // 验证订单状态（只允许待支付状态取消）
             if ($order->status !== Order::STATUS_WAIT_PAY) {
                 throw new \Exception('只有待支付状态的订单才能取消');

@@ -589,24 +589,24 @@ class OrderController extends BaseController
                 ], 400);
             }
 
-            // 执行取消订单逻辑
-            $result = $this->orderProcessService->cancelOrder($order);
-            
-            if ($result) {
-                return response()->json([
-                    'code' => 200,
-                    'message' => '订单取消成功',
-                    'data' => [
-                        'order' => $order->fresh()->load(['coupon', 'payment', 'goods'])
-                    ]
-                ]);
-            } else {
-                return response()->json([
-                    'code' => 500,
-                    'message' => '订单取消失败',
-                    'data' => null
-                ], 500);
-            }
+        // 执行取消订单逻辑（传入 user_id 进行二次验证）
+        $result = $this->orderProcessService->cancelOrder($order, $user->id);
+        
+        if ($result) {
+            return response()->json([
+                'code' => 200,
+                'message' => '订单取消成功',
+                'data' => [
+                    'order' => $order->fresh()->load(['coupon', 'payment', 'goods'])
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'code' => 500,
+                'message' => '订单取消失败',
+                'data' => null
+            ], 500);
+        }
 
         } catch (\Exception $e) {
             return response()->json([

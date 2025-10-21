@@ -10,6 +10,7 @@ use App\Service\BalanceService;
 use App\Service\OrderProcessService;
 use App\Service\PaymentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends BaseController
 {
@@ -150,14 +151,43 @@ class PaymentController extends BaseController
     public function notify($method, $uuid, Request $request)
     {
         try {
+            // 记录回调日志
+            Log::info('支付回调接收', [
+                'method' => $method,
+                'uuid' => $uuid,
+                'params' => $request->all(),
+                'ip' => $request->ip()
+            ]);
+            
             $paymentService = new PaymentService($method, null, $uuid);
             $verify = $paymentService->notify($request->input());
-            if (!$verify) abort(500, 'verify error');
+            
+            if (!$verify) {
+                Log::error('支付回调签名验证失败', [
+                    'method' => $method,
+                    'params' => $request->all()
+                ]);
+                abort(500, 'verify error');
+            }
+            
+            Log::info('支付回调验证成功', [
+                'trade_no' => $verify['trade_no'],
+                'actual_price' => $verify['actual_price'],
+                'callback_no' => $verify['callback_no']
+            ]);
+            
             if (!$this->handle($verify['trade_no'],$verify['actual_price'], $verify['callback_no'])) {
                 abort(500, 'handle error');
             }
+            
+            Log::info('支付回调处理成功', ['trade_no' => $verify['trade_no']]);
             die(isset($verify['custom_result']) ? $verify['custom_result'] : 'success');
         } catch (\Exception $e) {
+            Log::error('支付回调异常', [
+                'method' => $method,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             abort(500, 'fail');
         }
     }
@@ -183,8 +213,49 @@ class PaymentController extends BaseController
         if (!$order) {
             abort(500, 'order is not found');
         }
-        if ($order->status !== 0) return true;
-        $this->balanceService->completedOrder($tradeNo, $totalAmount, $callbackNo);
+        
+        // 订单状态处理逻辑
+        if ($order->status === Order::STATUS_WAIT_PAY) {
+            // ✅ 正常情况：订单待支付，处理支付成功
+            $this->balanceService->completedOrder($tradeNo, $totalAmount, $callbackNo);
+            return true;
+        }
+        
+        if ($order->status === Order::STATUS_COMPLETED) {
+            // ✅ 订单已完成，防止重复处理（支付平台可能重复回调）
+            Log::info('订单已完成，跳过重复处理', [
+                'order_sn' => $tradeNo,
+                'status' => $order->status
+            ]);
+            return true;
+        }
+        
+        // ⚠️ 异常情况：用户已付款，但订单状态异常（过期/取消等）
+        if (in_array($order->status, [Order::STATUS_EXPIRED, Order::STATUS_CANCELLED, Order::STATUS_FAILURE])) {
+            Log::error('⚠️ 支付异常：用户已付款但订单状态异常', [
+                'order_sn' => $tradeNo,
+                'current_status' => $order->status,
+                'actual_price' => $totalAmount,
+                'callback_no' => $callbackNo,
+                'message' => '用户已支付成功，但订单已过期/取消，需要人工处理'
+            ]);
+            
+            // 将订单改为异常状态，等待人工处理
+            $order->status = Order::STATUS_ABNORMAL;
+            $order->trade_no = $callbackNo;
+            $order->info = "支付异常：用户已付款({$totalAmount}元)，但订单原状态为{$order->status}，已标记为异常，请管理员及时处理。回调订单号：{$callbackNo}";
+            $order->save();
+        
+            
+            return true; // 返回成功，避免支付平台重复回调
+        }
+        
+        // 其他状态（待处理、处理中等），记录日志
+        Log::warning('订单状态不是待支付，跳过处理', [
+            'order_sn' => $tradeNo,
+            'current_status' => $order->status,
+            'actual_price' => $totalAmount
+        ]);
         return true;
     }
 
@@ -194,7 +265,15 @@ class PaymentController extends BaseController
         if (!$order) {
             abort(500, 'order is not found');
         }
-        if ($order->status !== 0) return true;
+        // 如果订单不是待支付状态，说明已处理过，直接返回成功（防重复处理）
+        if ($order->status !== RechargeOrder::STATUS_PENDING) {
+            Log::info('充值订单状态不是待支付，跳过处理', [
+                'order_sn' => $tradeNo,
+                'current_status' => $order->status,
+                'expected_status' => RechargeOrder::STATUS_PENDING
+            ]);
+            return true;
+        }
         $this->orderProcessService->completedOrder($tradeNo, $totalAmount, $callbackNo);
         return true;
     }
