@@ -290,7 +290,6 @@ class BalanceService
         // 更新订单状态（使用直接赋值，更安全）
         $order->status = \App\Models\Order::STATUS_COMPLETED;
         $order->trade_no = $callbackNo;
-        $order->paid_at = now();
         $order->save();
 
         return true;
