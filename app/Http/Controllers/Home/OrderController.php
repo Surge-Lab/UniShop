@@ -122,6 +122,15 @@ class OrderController extends BaseController
     {
         $order = $this->orderService->detailOrderSN($orderSN);
         if (empty($order)) {
+            // 调试：尝试直接查询看订单是否真的存在
+            $directQuery = Order::where('order_sn', $orderSN)->first();
+            \Log::error('订单不存在 - 直接查询结果', [
+                'order_sn' => $orderSN,
+                'direct_found' => $directQuery ? 'yes' : 'no',
+                'direct_user_id' => $directQuery ? $directQuery->user_id : null,
+                'direct_status' => $directQuery ? $directQuery->status : null
+            ]);
+            
             return $this->err(__('dujiaoka.prompt.order_does_not_exist'));
         }
         if ($order->status == Order::STATUS_EXPIRED) {

@@ -209,21 +209,36 @@ class OrderService
      * @copyright assimon<ashang@utf8.hk>
      * @link      http://utf8.hk/
      */
-    public function detailOrderSN(string $orderSN,$userId=0):? Order
+    public function detailOrderSN(string $orderSN,$userId=null):? Order
     {
         $query = Order::query()->with(['coupon', 'payment', 'goods'])->where('order_sn', $orderSN);
         
-        // 如果是游客查询（$userId = 0），查询 user_id 为 NULL 或 0 的订单
-        if ($userId == 0) {
-            $query->where(function($q) {
-                $q->whereNull('user_id')->orWhere('user_id', 0);
-            });
-        } else {
-            // 如果是登录用户查询，精确匹配 user_id
+        // 如果明确传入了 user_id，才进行用户验证
+        if ($userId !== null && $userId !== 0) {
+            \Log::info('查询指定用户订单', ['user_id' => $userId]);
             $query->where('user_id', $userId);
+        } else {
+            // 如果是 null 或 0，查询所有订单（不限制 user_id）
+            \Log::info('查询所有订单（不限制user_id）');
+            // 不添加 user_id 条件
         }
         
+        // 调试：打印 SQL
+        $sql = $query->toSql();
+        $bindings = $query->getBindings();
+        \Log::info('执行的 SQL', [
+            'sql' => $sql,
+            'bindings' => $bindings
+        ]);
+        
         $order = $query->first();
+        
+        \Log::info('查询结果', [
+            'found' => $order ? 'yes' : 'no',
+            'order_id' => $order ? $order->id : null,
+            'order_user_id' => $order ? $order->user_id : null
+        ]);
+        
         return $order;
     }
 
