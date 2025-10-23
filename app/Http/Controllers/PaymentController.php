@@ -216,8 +216,8 @@ class PaymentController extends BaseController
         
         // 订单状态处理逻辑
         if ($order->status === Order::STATUS_WAIT_PAY) {
-            // 正常情况：订单待支付，处理支付成功
-            $this->balanceService->completedOrder($tradeNo, $totalAmount, $callbackNo);
+            // 正常情况：订单待支付，处理支付成功\
+            $this->orderProcessService->completedOrder($tradeNo, $totalAmount, $callbackNo);
             return true;
         }
         

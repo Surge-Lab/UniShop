@@ -235,15 +235,15 @@ class ApiOrderService
     public function detailOrderSN(string $orderSN,$userId=0):? Order
     {
         $query = Order::query()->with(['coupon', 'payment', 'goods'])->where('order_sn', $orderSN);
-        
-        // 如果是游客查询（$userId = 0），查询 user_id 为 NULL 或 0 的订单
-        if ($userId === 0) {
-            $query->where(function($q) {
-                $q->whereNull('user_id')->orWhere('user_id', 0);
-            });
-        } else {
-            // 如果是登录用户查询，精确匹配 user_id
+
+        // 如果明确传入了 user_id，才进行用户验证
+        if ($userId !== null && $userId !== 0) {
+            \Log::info('查询指定用户订单', ['user_id' => $userId]);
             $query->where('user_id', $userId);
+        } else {
+            // 如果是 null 或 0，查询所有订单（不限制 user_id）
+            \Log::info('查询所有订单（不限制user_id）');
+            // 不添加 user_id 条件
         }
         
         $order = $query->first();
@@ -253,7 +253,17 @@ class ApiOrderService
 
     public function detailOrder(string $orderId,$userId=0):? Order
     {
-        $order = Order::query()->with(['coupon', 'payment', 'goods'])->where('id', $orderId)->where('user_id',$userId)->first();
+        $query = Order::query()->with(['coupon', 'payment', 'goods'])->where('id', $orderId)->where('user_id',$userId)->first();
+        // 如果是游客查询（$userId = 0），查询 user_id 为 NULL 或 0 的订单
+        if ($userId == 0) {
+            $query->where(function($q) {
+                $q->whereNull('user_id')->orWhere('user_id', 0);
+            });
+        } else {
+            // 如果是登录用户查询，精确匹配 user_id
+            $query->where('user_id', $userId);
+        }
+        $order = $query->first();
         return $order;
     }
 

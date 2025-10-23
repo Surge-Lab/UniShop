@@ -223,22 +223,7 @@ class OrderService
             // 不添加 user_id 条件
         }
         
-        // 调试：打印 SQL
-        $sql = $query->toSql();
-        $bindings = $query->getBindings();
-        \Log::info('执行的 SQL', [
-            'sql' => $sql,
-            'bindings' => $bindings
-        ]);
-        
         $order = $query->first();
-        
-        \Log::info('查询结果', [
-            'found' => $order ? 'yes' : 'no',
-            'order_id' => $order ? $order->id : null,
-            'order_user_id' => $order ? $order->user_id : null
-        ]);
-        
         return $order;
     }
 
